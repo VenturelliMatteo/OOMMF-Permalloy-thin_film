@@ -1,0 +1,108 @@
+# MIF 2.2
+# Description: SRT temperature for NiFe square thin film
+
+# Parameters
+
+set PI [expr {4*atan(1.0)}]
+set MU0 [expr {4*$PI*1e-7}]
+set width 3e-6;
+set thickness 2e-9;
+set stop 0.001;					# Stopping dm/dt 0.01        
+set cellz 2e-9;					# Cell z dimension
+set cellxy 8e-9;				# Cell xy dimension (exchange length for this geometry is 4.292)
+set Ms 7.2e5;				# Saturation Magnetization (A/m)
+set A 6e-12;				# Exchange constant (J/m)
+set K1 3.25e5;			# Magnetocrystalline anisotropy constant (J/m^3)
+
+
+
+
+
+
+
+
+# Atlas and mesh definition
+	
+Specify Oxs_BoxAtlas:atlas {
+	xrange {0 $width}
+	yrange {0 $width}
+	zrange {0 $thickness}
+	name NiFe
+}
+
+Specify Oxs_RectangularMesh:mesh [subst {
+    cellsize {$cellxy $cellxy $cellz} 
+    atlas :atlas
+}]
+
+
+
+
+
+
+
+
+# Exchange energy definition
+
+Specify Oxs_ExchangePtwise [subst {
+    A {
+        Oxs_AtlasScalarField {
+            atlas :atlas
+            values {
+				universe 0
+				NiFe $A
+            } 
+        } 
+    }
+}]
+
+# Demagnetizing energy definition
+
+Specify Oxs_Demag {}
+
+# Uniaxial anisotropy energy definition
+
+Specify Oxs_UniaxialAnisotropy [subst {
+   K1 $K1
+   axis {0 0 1}
+}]
+
+
+
+
+
+
+
+
+# Driver and Evolver definition
+
+Specify UHH_ThetaEvolve:evolver {
+	do_precess 1
+	alpha 0.5
+	temperature 60
+	fixed_timestep 2.5e-12
+}
+
+Specify Oxs_TimeDriver [subst {
+    evolver :evolver
+    mesh :mesh
+    stopping_dm_dt $stop
+    Ms {
+         Oxs_AtlasScalarField {
+            atlas :atlas
+            values {
+				universe 0
+				NiFe $Ms
+            } 
+        }
+    }			
+    m0 { 
+        Oxs_AtlasVectorField {
+            atlas :atlas
+            values {
+				universe {0 0 0}
+				NiFe {0 0 1}	
+            }
+        }
+    }
+}]
