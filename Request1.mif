@@ -9,10 +9,10 @@ set width 3e-6;
 set thickness 2e-9;
 set stop 0.001;					# Stopping dm/dt 0.01        
 set cellz 2e-9;					# Cell z dimension
-set cellxy 8e-9;				# Cell xy dimension (exchange length for this geometry is 4.292)
-set Ms 7.2e5;				# Saturation Magnetization (A/m)
-set A 6e-12;				# Exchange constant (J/m)
-set K1 3.25e5;			# Magnetocrystalline anisotropy constant (J/m^3)
+set cellxy 6e-9;				# Cell xy dimension (exchange length for this geometry is 4.292)
+set Ms 7.2e5;					# Saturation Magnetization (A/m)
+set A 6e-12;					# Exchange constant (J/m)
+set K1 3.25e5;					# Magnetocrystalline anisotropy constant (J/m^3)
 
 
 
